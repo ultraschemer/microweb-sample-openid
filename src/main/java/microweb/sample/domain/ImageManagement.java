@@ -63,6 +63,23 @@ public class ImageManagement extends StandardDomain {
         }).start();
     }
 
+    // Save Base64Image representation
+    public void saveBase64ImageRepresentation(String base64contents, String name, UUID userId) throws StandardException {
+        try(Session session = openTransactionSession()) {
+            // A.5: Save image in database
+            Image img = new Image();
+            img.setBase64data(base64contents);
+            img.setName(name);
+            img.setOwnerUserId(userId);
+            session.persist(img);
+
+            // A.6: Commit saved data:
+            session.getTransaction().commit();
+        } catch(Exception e) {
+            throw new ImageManagementSaveBase64RepresentationError("Unable to save image data", e);
+        }
+    }
+
     // List images from user:
     public List<ImageListingData> list(User user) throws StandardException {
         try(Session session = openTransactionSession()) {
