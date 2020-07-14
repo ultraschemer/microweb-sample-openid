@@ -1,7 +1,7 @@
 package microweb.sample.controller;
 
 import com.ultraschemer.microweb.domain.AuthManagement;
-import com.ultraschemer.microweb.vertx.SimpleController;
+import com.ultraschemer.microweb.vertx.CentralUserRepositoryAuthorizedController;
 import freemarker.template.Template;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
@@ -10,7 +10,7 @@ import microweb.sample.view.FtlHelper;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GuiUserLogoffProcessController extends SimpleController {
+public class GuiUserLogoffProcessController extends CentralUserRepositoryAuthorizedController {
     private static Template homePageTemplate = null;
 
     static {
