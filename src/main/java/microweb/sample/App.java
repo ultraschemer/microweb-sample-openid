@@ -24,6 +24,9 @@ public class App extends WebAppVerticle {
 
         // Register controllers:
 
+        // Finish login authentication:
+        registerController(HttpMethod.GET, "/v0/finish-login", new FinishLoginController());
+
         // User access controllers:
         registerController(HttpMethod.GET, "/v0/gui-user-login", new GuiUserLoginViewController());
         registerController(HttpMethod.POST, "/v0/gui-user-login", new GuiUserLoginProcessController());
@@ -53,7 +56,7 @@ public class App extends WebAppVerticle {
 
         RegisteredReverseProxy proxy = new RegisteredReverseProxy(9080);
         proxy.registerPath("^\\/auth.*$", "localhost:8080");
-        proxy.registerPath("^\\/v0\\.*", "localhost:48080" );
+        proxy.registerPath("^\\/v0.*$", "localhost:48080" );
         proxy.registerPath("^\\/$", "localhost:48080");
         proxy.run();
     }

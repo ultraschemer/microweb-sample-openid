@@ -4,6 +4,7 @@ import com.ultraschemer.microweb.domain.UserManagement;
 import com.ultraschemer.microweb.entity.Role;
 import com.ultraschemer.microweb.entity.User;
 import com.ultraschemer.microweb.utils.Resource;
+import io.vertx.core.json.JsonObject;
 
 import java.util.HashSet;
 import java.util.List;
@@ -48,5 +49,12 @@ public class PermissionManagement {
         } catch(Exception e) {
             return false;
         }
+    }
+
+    public static JsonObject finishLogin(String state, String sessionState, String code) {
+        JsonObject res = new JsonObject();
+        res.put("accessToken", "this is returned access token");
+        res.put("refreshToken", "this is the refresh token");
+        return res;
     }
 }

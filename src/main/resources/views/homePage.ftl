@@ -64,7 +64,7 @@
         </table>
         </#if>
     <#else>
-        <p>Login <a href="/v0/gui-user-login">here</a>.</p>
+        <p>Login <a href="/auth/realms/microweb/protocol/openid-connect/auth?scope=openid&response_type=code&client_id=microwebsampleapp&redirect_uri=http:%2F%2Fwww.sample.microweb:9080%2Fv0%2Ffinish-login&state=000001">here</a>.</p>
     </#if>
 </body>
 </html>
