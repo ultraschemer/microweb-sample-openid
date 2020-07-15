@@ -1,8 +1,6 @@
 package microweb.sample;
 
 import com.ultraschemer.microweb.controller.*;
-import com.ultraschemer.microweb.domain.RoleManagement;
-import com.ultraschemer.microweb.domain.UserManagement;
 import com.ultraschemer.microweb.persistence.EntityUtil;
 import com.ultraschemer.microweb.proxy.RegisteredReverseProxy;
 import com.ultraschemer.microweb.vertx.WebAppVerticle;
@@ -27,6 +25,9 @@ public class App extends WebAppVerticle {
         // Finish login authentication:
         registerController(HttpMethod.GET, "/v0/finish-login", new FinishLoginController());
 
+        // Default finish consent call:
+        registerController(HttpMethod.GET, "/v0/finish-consent", new FinishConsentController());
+
         // User access controllers:
         registerController(HttpMethod.GET, "/v0/gui-user-login", new GuiUserLoginViewController());
         registerController(HttpMethod.POST, "/v0/gui-user-login", new GuiUserLoginProcessController());
@@ -43,7 +44,7 @@ public class App extends WebAppVerticle {
         registerController(HttpMethod.POST, "/v0/gui-user", new GuiCreateUserController());
 
         // REST API calls:
-        registerController(HttpMethod.POST, "/v0/user", new UserCreationController());
+        registerController(HttpMethod.POST, "/v0/user", new GuiCreateUserController());
         registerController(HttpMethod.GET, "/v0/user", new UserController());
         registerController(HttpMethod.GET, "/v0/user/:userIdOrName", new OtherUsersController());
         registerController(HttpMethod.PATCH, "/v0/user/:id/password", new UserPasswordUpdateController());

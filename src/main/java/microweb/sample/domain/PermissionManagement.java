@@ -1,60 +1,60 @@
 package microweb.sample.domain;
 
-import com.ultraschemer.microweb.domain.UserManagement;
-import com.ultraschemer.microweb.entity.Role;
+import com.ultraschemer.microweb.domain.CentralUserRepositoryManagement;
+import com.ultraschemer.microweb.domain.Configuration;
 import com.ultraschemer.microweb.entity.User;
-import com.ultraschemer.microweb.utils.Resource;
+import com.ultraschemer.microweb.error.StandardException;
 import io.vertx.core.json.JsonObject;
+import microweb.sample.domain.error.FinishAuthenticationConsentException;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Objects;
+import java.util.function.BiConsumer;
 
 public class PermissionManagement {
-    /**
-     * Simple permission evaluation. Just verify if the path and method are inside a specific group. If so, return True.
-     * False, otherwise.
-     * @param u The user being evaluated
-     * @param path The path being evaluated
-     * @return True, if the user has permission to access path. False, otherwise.
-     */
-    public static boolean evaluatePermission(User u, String path, String method) {
-        try {
-            // If user is given by controller, than authorization has been evaluated.
-            if(u != null) {
-                // In the case of a valid authorization, it's necessary to evaluate permissions:
-                List<Role> roleList = UserManagement.loadRolesFromUser(u.getId());
-                Set<String> roleSet = roleList.stream().map(Role::getName).collect(Collectors.toSet());
-                Set<String> restrictRoleSet = new HashSet<>();
-                restrictRoleSet.add("root");
-                restrictRoleSet.add("user-manager");
-                roleSet.retainAll(restrictRoleSet);
+    private static OkHttpClient client = new OkHttpClient();
 
-                if (roleSet.size() > 0) {
-                    // All routes are permitted
-                    return true;
+    public static void finishLogin(String state, String sessionState, String code,
+                                   BiConsumer<JsonObject, StandardException> callResult) {
+        // Since this method uses an internal REST call recursively, call it asynchronously, to avoid to block
+        // Vert.X event queue (A Vert.X future can be used here):
+        new Thread(() -> {
+            try {
+                Request clientRequest = new Request.Builder()
+                        .url(Configuration.read("server backend resource") +
+                                "/v0/finish-consent?" +
+                                "state=" + state + "&" +
+                                "session_state=" + sessionState + "&" +
+                                "code=" + code + "&" +
+                                "redirect_uri=" + Configuration.read("keycloak client redirect uri") + "&" +
+                                "client_secret=" + Configuration.read("keycloak client application secret") + "&" +
+                                "client_id=" + Configuration.read("keycloak client application"))
+                        .build();
+
+                try (Response response = client.newCall(clientRequest).execute()) {
+                    if (response.code() <= 299) {
+                        JsonObject res = new JsonObject(Objects.requireNonNull(response.body()).string());
+
+                        // Locate user from returned data, evaluating the permission of an ALWAYS permitted resource:
+                        User u = CentralUserRepositoryManagement.evaluateResourcePermission("GET", "/v0/logoff",
+                                "Bearer " + res.getString("access_token"));
+                        res.put("Microweb-User-Id", u.getId().toString());
+                        res.put("Microweb-User-Name", u.getName());
+                        res.put("Microweb-Central-Control-User-Id", u.getCentralControlId().toString());
+
+                        callResult.accept(res, null);
+                    } else {
+                        callResult.accept(null, new FinishAuthenticationConsentException("Unable to finish client authentication consent: " +
+                                Objects.requireNonNull(response.body()).string()));
+                    }
+                } catch (Exception e) {
+                    callResult.accept(null, new FinishAuthenticationConsentException("Unable to finish client authentication consent.", e));
                 }
-
-                // Block all restricted paths:
-                return  !Resource.resourceIsEquivalentToPath("GET /v0/gui-user-management#", path, method) &&
-                        !Resource.resourceIsEquivalentToPath("POST /v0/gui-user/:id/role#", path, method) &&
-                        !Resource.resourceIsEquivalentToPath("POST /v0/gui-user#", path, method) &&
-                        !Resource.resourceIsEquivalentToPath("POST /v0/user#", path, method) &&
-                        !Resource.resourceIsEquivalentToPath("GET /v0/user/:userIdOrName#", path, method);
-            } else {
-                // Any route without required authorization is automatically permitted:
-                return true;
+            } catch (Exception e) {
+                callResult.accept(null, new FinishAuthenticationConsentException("Unable to finish client authentication consent", e));
             }
-        } catch(Exception e) {
-            return false;
-        }
-    }
-
-    public static JsonObject finishLogin(String state, String sessionState, String code) {
-        JsonObject res = new JsonObject();
-        res.put("accessToken", "this is returned access token");
-        res.put("refreshToken", "this is the refresh token");
-        return res;
+        }).start();
     }
 }

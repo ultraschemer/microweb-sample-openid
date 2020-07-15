@@ -1,9 +1,7 @@
 package microweb.sample.controller;
 
-import com.ultraschemer.microweb.domain.AuthManagement;
 import com.ultraschemer.microweb.domain.UserManagement;
 import com.ultraschemer.microweb.domain.bean.UserData;
-import com.ultraschemer.microweb.entity.User;
 import com.ultraschemer.microweb.persistence.EntityUtil;
 import com.ultraschemer.microweb.vertx.SimpleController;
 import freemarker.template.Template;
@@ -48,15 +46,16 @@ public class DefaultHomePageController extends SimpleController {
         // Load user cookie:
         HttpServerRequest request = routingContext.request();
         Cookie authorizationToken = request.getCookie("Microweb-Access-Token");
+        Cookie userId = request.getCookie("Microweb-User-Id");
 
         // Populate Homepage data model:
         if(authorizationToken != null) {
             // Get user data:
-            User u = AuthManagement.authorize(authorizationToken.getValue());
+            UserData u = UserManagement.loadUser(userId.getValue());
 
             // Load images, if they are available for this user:
             ImageManagement imageManagement = new ImageManagement(EntityUtil.getSessionFactory(), routingContext.vertx());
-            List<ImageListingData> imageListingData = imageManagement.list(u);
+            List<ImageListingData> imageListingData = imageManagement.list(u.getId());
 
             // Load users, to assign images to them:
             List<UserData> users = UserManagement.loadUsers(1000, 0);

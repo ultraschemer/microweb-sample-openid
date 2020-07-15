@@ -81,8 +81,11 @@ public class ImageManagement extends StandardDomain {
     }
 
     // List images from user:
-    public List<ImageListingData> list(User user) throws StandardException {
+    public List<ImageListingData> list(UUID userId) throws StandardException {
         try(Session session = openTransactionSession()) {
+            User user = session.createQuery("from User where id = :uid", User.class)
+                    .setParameter("uid", userId).getSingleResult();
+
             List<ImageListingData> res = new LinkedList<>();
 
             List<User_Image> accessibleImageList =

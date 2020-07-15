@@ -49,7 +49,6 @@
         <tr>
             <td>Name:</td>
             <td>Roles:</td>
-            <td>Add Role:</td>
         </tr>
         <#list users as u>
             <tr>
@@ -58,17 +57,6 @@
                     <#list u.roles as r>
                         <strong style="color: gray">[</strong>${r.name}<strong style="color: gray">]</strong>&nbsp;
                     </#list>
-                </td>
-                <td>
-                    <form action="/v0/gui-user/${u.id}/role" method="post">
-                        <input type="hidden" name="userId" value="${u.id}"/>
-                        <select name="role">
-                            <#list roles as r>
-                                <option value="${r.name}">${r.name}</option>
-                            </#list>
-                        </select>
-                        <input type="submit" value="&#8594;"/>
-                    </form>
                 </td>
             </tr>
         </#list>
