@@ -91,7 +91,7 @@ public class PermissionManagement {
         }).start();
     }
 
-    public static void logoff(String refreshToken, BiConsumer<JsonObject, StandardException> callResult) {
+    public static void refresh(String refreshToken, BiConsumer<JsonObject, StandardException> callResult) {
         new Thread(() -> {
             // TODO: implement refresh logic
             // As is shown in the next PHP code:
