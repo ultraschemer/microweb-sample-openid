@@ -6,9 +6,8 @@ import com.ultraschemer.microweb.entity.User;
 import com.ultraschemer.microweb.error.StandardException;
 import io.vertx.core.json.JsonObject;
 import microweb.sample.domain.error.FinishAuthenticationConsentException;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import microweb.sample.domain.error.LogoffException;
+import okhttp3.*;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -54,6 +53,42 @@ public class PermissionManagement {
                 }
             } catch (Exception e) {
                 callResult.accept(null, new FinishAuthenticationConsentException("Unable to finish client authentication consent", e));
+            }
+        }).start();
+    }
+
+    public static void logoff(String refreshToken, String accessToken, BiConsumer<JsonObject, StandardException> callResult) {
+        new Thread(() -> {
+            try {
+                FormBody body = new FormBody.Builder()
+                        .add("client_id", Configuration.read("keycloak client application"))
+                        .add("client_secret", Configuration.read("keycloak client application secret"))
+                        .add("refresh_token", refreshToken)
+                        .build();
+                Request clientRequest = new Request.Builder()
+                        .url(Configuration.read("server backend resource") + "/auth/reamls/" +
+                                Configuration.read("keycloak client application") +
+                                "/protocol/openid-connect/logout")
+                        .post(body)
+                        .addHeader("Authorization", "Bearer: " + accessToken)
+                        .build();
+                try (Response response = client.newCall(clientRequest).execute()) {
+                    if (response.code() <= 299) {
+                        if(response.code()!=204) {
+                            JsonObject res = new JsonObject(Objects.requireNonNull(response.body()).string());
+                            callResult.accept(res, null);
+                        } else {
+                            callResult.accept(new JsonObject(),null);
+                        }
+                    } else {
+                        callResult.accept(null, new FinishAuthenticationConsentException("Unable to finish client authentication consent: " +
+                                Objects.requireNonNull(response.body()).string()));
+                    }
+                } catch(Exception e) {
+                    callResult.accept(null, new LogoffException("Unable to perform logoff.", e));
+                }
+            } catch(Throwable t) {
+                callResult.accept(null, new LogoffException("Unable to perform logoff.", t));
             }
         }).start();
     }
