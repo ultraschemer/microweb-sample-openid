@@ -2,26 +2,12 @@ package microweb.sample.controller;
 
 import com.ultraschemer.microweb.error.StandardException;
 import com.ultraschemer.microweb.vertx.CentralUserRepositoryAuthorizedController;
-import freemarker.template.Template;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import microweb.sample.domain.PermissionManagement;
-import microweb.sample.view.FtlHelper;
 
 public class GuiUserLogoffProcessController extends CentralUserRepositoryAuthorizedController {
-    private static Template homePageTemplate = null;
-
-    static {
-        try {
-            homePageTemplate = FtlHelper.getConfiguration().getTemplate("homePage.ftl");
-        } catch(Exception e) {
-            // This error should not occur - so print it in screen, so the developer can see it, while
-            // creating the project
-            e.printStackTrace();
-        }
-    }
-
     public GuiUserLogoffProcessController() {
         super(500, "eb474551-42d5-4452-be4f-4875d525b993");
     }
@@ -51,17 +37,5 @@ public class GuiUserLogoffProcessController extends CentralUserRepositoryAuthori
                                 "</html>");
             });
         });
-
-        // // Perform logoff here:
-        // AuthManagement.unauthorize(token);
-        // Map<String, Object> homepageDataRoot = new HashMap<>();
-        // homepageDataRoot.put("logged", false);
-
-        // // Render home page again:
-        // routingContext
-        //         .response()
-        //         .putHeader("Content-type", "text/html")
-        //         .end(FtlHelper.processToString(homePageTemplate, homepageDataRoot));
-
     }
 }
