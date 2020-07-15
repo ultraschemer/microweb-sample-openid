@@ -1,14 +1,15 @@
 package microweb.sample;
 
-import com.ultraschemer.microweb.controller.*;
+import com.ultraschemer.microweb.controller.FinishConsentController;
+import com.ultraschemer.microweb.controller.OtherUsersController;
+import com.ultraschemer.microweb.controller.UserPasswordUpdateController;
 import com.ultraschemer.microweb.persistence.EntityUtil;
-import com.ultraschemer.microweb.proxy.RegisteredReverseProxy;
+import com.ultraschemer.microweb.proxy.CentralAuthorizedRegisteredReverseProxy;
 import com.ultraschemer.microweb.vertx.WebAppVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.handler.StaticHandler;
 import microweb.sample.controller.*;
-import microweb.sample.controller.UserController;
 
 // 1. Specialize WebAppVerticle:
 public class App extends WebAppVerticle {
@@ -54,11 +55,25 @@ public class App extends WebAppVerticle {
 
         // Default system home page handling:
         registerController(HttpMethod.GET, "/v0", new DefaultHomePageController());
+
+        // Remove this path, because it will be handled by the reverse proxy:
+        // Register calls to external microservices:
+        // registerController(HttpMethod.GET, "/image", new PostgRESTRedirectionController());
+
+        // At last step, register the route "GET /", which is the most generic one:
         registerController(HttpMethod.GET, "/", new DefaultHomePageController());
 
-        RegisteredReverseProxy proxy = new RegisteredReverseProxy(9080);
+        CentralAuthorizedRegisteredReverseProxy proxy = new CentralAuthorizedRegisteredReverseProxy(9080);
+
+        // KeyCloak and Microweb own paths aren't evaluated by the reverse proxy,
+        // since they have their own Permission control:
         proxy.registerPath("^\\/auth.*$", "localhost:8080");
-        proxy.registerPath("^\\/v0.*$", "localhost:48080" );
+        proxy.registerPath("^\\/v0.*$", "localhost:48080");
+
+        // Add any generic search path to PostgREST, with the exception of "/", and enable Permission filtering on them:
+        proxy.registerPath("^\\/.+$", "localhost:9580", true);
+
+        // "/", being the most generic address, continue to be handled by this application:
         proxy.registerPath("^\\/$", "localhost:48080");
         proxy.run();
     }
