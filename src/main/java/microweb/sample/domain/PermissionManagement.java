@@ -66,11 +66,9 @@ public class PermissionManagement {
                         .add("refresh_token", refreshToken)
                         .build();
                 Request clientRequest = new Request.Builder()
-                        .url(Configuration.read("server backend resource") + "/auth/reamls/" +
-                                Configuration.read("keycloak client application") +
-                                "/protocol/openid-connect/logout")
+                        .url(CentralUserRepositoryManagement.wellKnown().getString("end_session_endpoint"))
                         .post(body)
-                        .addHeader("Authorization", "Bearer: " + accessToken)
+                        .addHeader("Authorization", "Bearer " + accessToken)
                         .build();
                 try (Response response = client.newCall(clientRequest).execute()) {
                     if (response.code() <= 299) {

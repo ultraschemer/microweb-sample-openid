@@ -21,6 +21,7 @@ public class GuiUserLogoffProcessController extends CentralUserRepositoryAuthori
             asyncEvaluation(500, "8ada30f6-e400-4994-9c2e-cd41df80439f", context, () -> {
                 // Delete all cookies:
                 response.setStatusCode(200)
+                        .putHeader("Content-type", "text/html")
                         .end("<html><head>" +
                                 "<title>Microweb login</title>" +
                                 "<head>" +
