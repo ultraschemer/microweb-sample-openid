@@ -3,7 +3,7 @@ package microweb.sample.controller;
 import com.ultraschemer.microweb.entity.User;
 import com.ultraschemer.microweb.persistence.EntityUtil;
 import com.ultraschemer.microweb.validation.Validator;
-import com.ultraschemer.microweb.vertx.SimpleController;
+import com.ultraschemer.microweb.vertx.CentralUserRepositoryAuthorizedController;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
@@ -12,7 +12,7 @@ import microweb.sample.domain.ImageManagement;
 
 import javax.xml.bind.ValidationException;
 
-public class ImageCreateController extends SimpleController {
+public class ImageCreateController extends CentralUserRepositoryAuthorizedController {
     public ImageCreateController() {
         super(500, "cb989df8-acf1-46a5-bf9b-75879ebb4abe");
     }

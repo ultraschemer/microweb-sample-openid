@@ -1,14 +1,14 @@
 package microweb.sample.controller;
 
 import com.ultraschemer.microweb.domain.UserManagement;
-import com.ultraschemer.microweb.vertx.SimpleController;
+import com.ultraschemer.microweb.vertx.CentralUserRepositoryAuthorizedController;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.UUID;
 
-public class GuiAssignRoleController extends SimpleController {
+public class GuiAssignRoleController extends CentralUserRepositoryAuthorizedController {
     public GuiAssignRoleController() {
         super(500, "0d75c820-7650-41cd-be63-01c91bf2e4ea");
     }

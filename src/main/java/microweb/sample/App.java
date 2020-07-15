@@ -8,6 +8,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.handler.StaticHandler;
 import microweb.sample.controller.*;
+import microweb.sample.controller.UserController;
 
 // 1. Specialize WebAppVerticle:
 public class App extends WebAppVerticle {

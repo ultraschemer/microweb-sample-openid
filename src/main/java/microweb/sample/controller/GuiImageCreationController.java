@@ -3,6 +3,7 @@ package microweb.sample.controller;
 import com.ultraschemer.microweb.entity.User;
 import com.ultraschemer.microweb.error.StandardException;
 import com.ultraschemer.microweb.persistence.EntityUtil;
+import com.ultraschemer.microweb.vertx.CentralUserRepositoryAuthorizedController;
 import com.ultraschemer.microweb.vertx.SimpleController;
 import freemarker.template.Template;
 import io.vertx.core.http.HttpServerResponse;
@@ -17,7 +18,7 @@ import java.io.File;
 import java.util.Set;
 import java.util.UUID;
 
-public class GuiImageCreationController extends SimpleController {
+public class GuiImageCreationController extends CentralUserRepositoryAuthorizedController {
     private static Template homePageTemplate = null;
 
     static {

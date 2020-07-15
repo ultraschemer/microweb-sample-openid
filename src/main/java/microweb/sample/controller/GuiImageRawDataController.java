@@ -2,7 +2,7 @@ package microweb.sample.controller;
 
 import com.ultraschemer.microweb.error.StandardException;
 import com.ultraschemer.microweb.persistence.EntityUtil;
-import com.ultraschemer.microweb.vertx.SimpleController;
+import com.ultraschemer.microweb.vertx.CentralUserRepositoryAuthorizedController;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
@@ -12,7 +12,7 @@ import microweb.sample.entity.Image;
 
 import java.util.UUID;
 
-public class GuiImageRawDataController extends SimpleController {
+public class GuiImageRawDataController extends CentralUserRepositoryAuthorizedController {
     public GuiImageRawDataController() {
         super(500, "303c2bc7-cd1e-4570-b0c3-5a25053a8d1b");
     }

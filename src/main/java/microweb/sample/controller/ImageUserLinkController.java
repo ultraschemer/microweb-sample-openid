@@ -2,14 +2,14 @@ package microweb.sample.controller;
 
 import com.ultraschemer.microweb.persistence.EntityUtil;
 import com.ultraschemer.microweb.validation.Validator;
-import com.ultraschemer.microweb.vertx.SimpleController;
+import com.ultraschemer.microweb.vertx.CentralUserRepositoryAuthorizedController;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 import microweb.sample.controller.bean.ImageUserLinkData;
 import microweb.sample.domain.ImageManagement;
 
-public class ImageUserLinkController extends SimpleController {
+public class ImageUserLinkController extends CentralUserRepositoryAuthorizedController {
     public ImageUserLinkController() {
         super(500, "c57ff7a7-a255-4bf9-b6e3-dd923f2bffa9");
     }

@@ -1,7 +1,7 @@
 package microweb.sample.controller;
 
 import com.ultraschemer.microweb.persistence.EntityUtil;
-import com.ultraschemer.microweb.vertx.SimpleController;
+import com.ultraschemer.microweb.vertx.CentralUserRepositoryAuthorizedController;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
@@ -9,7 +9,7 @@ import microweb.sample.domain.ImageManagement;
 
 import java.util.UUID;
 
-public class GuiImageAssignController extends SimpleController {
+public class GuiImageAssignController extends CentralUserRepositoryAuthorizedController {
     public GuiImageAssignController() {
         super(500, "c8fd6b8c-b0ec-4331-bf84-20382e616bf5");
     }

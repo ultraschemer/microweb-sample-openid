@@ -3,7 +3,7 @@ package microweb.sample.controller;
 import com.ultraschemer.microweb.controller.bean.CreateUserData;
 import com.ultraschemer.microweb.domain.CentralUserRepositoryManagement;
 import com.ultraschemer.microweb.validation.Validator;
-import com.ultraschemer.microweb.vertx.SimpleController;
+import com.ultraschemer.microweb.vertx.CentralUserRepositoryAuthorizedController;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
@@ -11,7 +11,7 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.util.Collections;
 
-public class GuiCreateUserController extends SimpleController {
+public class GuiCreateUserController extends CentralUserRepositoryAuthorizedController {
     public GuiCreateUserController() {
         super(500, "63ccb2ee-3c99-4b20-91d4-bb521f4945dd");
     }

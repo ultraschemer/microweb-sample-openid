@@ -3,7 +3,7 @@ package microweb.sample.controller;
 import com.ultraschemer.microweb.domain.RoleManagement;
 import com.ultraschemer.microweb.domain.UserManagement;
 import com.ultraschemer.microweb.domain.bean.UserData;
-import com.ultraschemer.microweb.vertx.SimpleController;
+import com.ultraschemer.microweb.vertx.CentralUserRepositoryAuthorizedController;
 import freemarker.template.Template;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GuiUserManagementController extends SimpleController {
+public class GuiUserManagementController extends CentralUserRepositoryAuthorizedController {
     private static Template userManagementTemplate;
 
     static {

@@ -35,7 +35,7 @@ allprojects {
 
 dependencies {
     // The entire Microweb framework:
-    implementation 'com.ultraschemer.microweb:microweb:0.6.11'
+    implementation 'com.ultraschemer.microweb:microweb:0.6.12'
 
     // Database driver:
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.4'
